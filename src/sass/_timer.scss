@@ -1,0 +1,49 @@
+input {
+  display: flex;
+  margin: 20px auto 20px auto;
+
+  width: 170px;
+  height: 40px;
+
+  text-align: center;
+  font-weight: 800;
+}
+
+button {
+  display: flex;
+  margin: 20px auto 20px auto;
+
+  width: 170px;
+  height: 40px;
+
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 5px;
+  background-color: rgba(70, 155, 235, 0.644);
+
+  font-size: large;
+  font-weight: 800;
+}
+
+.timer {
+  display: flex;
+  margin: 20px;
+  justify-content: center;
+}
+
+.field {
+  font-size: large;
+
+  width: 150px;
+  margin-left: 20px;
+  margin-right: 20px;
+  padding: 20px;
+
+  background-color: yellowgreen;
+  color: white;
+  border: 1px solid black;
+  border-radius: 5%;
+  text-align: center;
+  font-weight: 800;
+}
