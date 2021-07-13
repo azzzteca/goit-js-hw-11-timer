@@ -4,25 +4,57 @@ import Swal from 'sweetalert2';
 const refs = {
   input: document.getElementById('date-selector'),
   button: document.querySelector('button[data-start]'),
+  days: document.querySelector('span[data-days]'),
+  hours: document.querySelector('span[data-hours]'),
+  minutes: document.querySelector('span[data-minutes]'),
+  seconds: document.querySelector('span[data-seconds]'),
 };
+
+const INTERVAL_TIME = 1000;
+let settedDate;
+let currentDate;
+let timeLeft;
 
 refs.input.addEventListener('input', isSettedDateCorrect);
 
 function isSettedDateCorrect(evt) {
-  const settedDate = Date.parse(evt.target.value);
-  const currentDate = Date.now();
+  settedDate = Date.parse(evt.target.value);
+  const currentDateForCheck = Date.now();
 
-  if (settedDate <= currentDate) {
-    console.log('Выберите пожалуйста корректную дату');
+  if (settedDate <= currentDateForCheck) {
+    Swal.fire('Please choose a date in the future');
     return;
   }
 
+  refs.button.style.display = 'flex';
   refs.button.addEventListener('click', startTimer);
 }
 
 function startTimer() {
-  console.log('стартую');
-  // refs.button.textContent = 'Stop countdown';
+  refs.input.removeEventListener('input', isSettedDateCorrect);
+
+  setInterval(() => {
+    currentDate = Date.now();
+
+    timeLeft = settedDate - currentDate;
+
+    const { days, hours, minutes, seconds } = convertMs(timeLeft);
+
+    if ((days === '00') & (hours === '00') & (minutes === '00') & (seconds === '00')) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Кина не будет!',
+        // footer: '<a href="">Why do I have this issue?</a>'
+      });
+      return;
+    }
+
+    refs.seconds.textContent = `${seconds}`;
+    refs.minutes.textContent = `${minutes}`;
+    refs.hours.textContent = `${hours}`;
+    refs.days.textContent = `${days}`;
+  }, INTERVAL_TIME);
 }
 
 function finish() {
@@ -35,6 +67,10 @@ function finish() {
   });
 }
 
+function pad(value) {
+  return String(value).padStart(2, '0');
+}
+
 function convertMs(ms) {
   // Number of milliseconds per unit of time
   const second = 1000;
@@ -43,13 +79,13 @@ function convertMs(ms) {
   const day = hour * 24;
 
   // Remaining days
-  const days = Math.floor(ms / day);
+  const days = pad(Math.floor(ms / day));
   // Remaining hours
-  const hours = Math.floor((ms % day) / hour);
+  const hours = pad(Math.floor((ms % day) / hour));
   // Remaining minutes
-  const minutes = Math.floor(((ms % day) % hour) / minute);
+  const minutes = pad(Math.floor(((ms % day) % hour) / minute));
   // Remaining seconds
-  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
+  const seconds = pad(Math.floor((((ms % day) % hour) % minute) / second));
 
   return { days, hours, minutes, seconds };
 }
